@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "网格标尺 Grid Ruler",
+  "version": "1.1.0",
+  "description": "点击工具栏图标（或按 Alt+Shift+G），为当前网页叠加 8/32/128 半透明网格标尺，快速目测字体大小与间距。",
+  "permissions": ["activeTab", "scripting"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "网格开关：点一下显示/隐藏网格"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ],
+  "commands": {
+    "toggle-grid": {
+      "suggested_key": {
+        "default": "Alt+Shift+G"
+      },
+      "description": "切换网格覆盖层"
+    }
+  }
+}
