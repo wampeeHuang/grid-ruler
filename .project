@@ -1,0 +1,7 @@
+{
+  "id": "grid-ruler",
+  "name": "网格标尺",
+  "description": "Chrome 扩展：网页叠加 8/32/128px 半透明网格标尺，目测宽度、间距与圆角",
+  "created": "2026-08-22",
+  "status": "active"
+}
