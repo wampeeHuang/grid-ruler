@@ -46,43 +46,60 @@ description: |
 
 ## 怎么用
 
-脚本就在本技能目录里（`bin/grid.js` + `../scale.json` 升一级在仓库根，见下方「文件构成」），
-纯 Node、零依赖、不需要装包。**下例用 `$SKILL` 占位技能目录**，执行时替换成你自己的绝对路径即可：
+脚本在**本技能目录**的 `scripts/grid.js`（纯 Node、零依赖、不需要装包）。执行时把
+`$SKILL` 换成技能目录的绝对路径：
 
 ```bash
-SKILL=/path/to/grid-ruler/skill            # 本机：D:\agent-skills\skills\grid-ruler
+SKILL=/path/to/grid-ruler            # 本机：D:\agent-skills\skills\grid-ruler
 
 # 1) 口头表达 -> 确定 px（最常用）
-node "$SKILL/bin/grid.js" nudge --from 24 --to 大一点
+node "$SKILL/scripts/grid.js" nudge --from 24 --to 大一点
 #    「大一点」：24px -> 32px（+8，即 +1 个 8 的档）
 #    别的可选：32 / 40 / 48px
 
 # 2) 任意值吸附到尺子
-node "$SKILL/bin/grid.js" snap 20 13 4.5
+node "$SKILL/scripts/grid.js" snap 20 13 4.5
 #    20 -> 16px（-4）    13 -> 16px（+3）    4.5 -> 8px（+3.5）
 
 # 3) 检查文件里的间距是否在尺子上
-node "$SKILL/bin/grid.js" check src/app.css src/Card.tsx
+node "$SKILL/scripts/grid.js" check src/app.css src/Card.tsx
 #    3 个间距值，1 个不在 8 的倍数上
 #      src/app.css:2 margin: 60px -> 64px（+4）
 
 # 4) 打印档位表
-node "$SKILL/bin/grid.js" scale
+node "$SKILL/scripts/grid.js" scale
 ```
 
 所有子命令都支持 `--json`，给需要机器读的场景用。
+（开发仓库里同一脚本位于 `bin/grid.js`，功能一致。）
 
 ## 文件构成
 
 | 文件 | 作用 |
 | --- | --- |
 | `SKILL.md` | 本文件：尺子定义、命令用法、边界 |
-| `bin/grid.js` | 换算脚本，无依赖 |
-| `bin/scale.json` | **唯一真相源**：基准、档位、口头表达词表（与脚本同目录） |
+| `scripts/grid.js` | 换算脚本，无依赖 |
+| `scripts/scale.json` | **唯一真相源**：基准、档位、口头表达词表（与脚本同目录） |
+| `extension/` | 浏览器扩展的完整源码（见下） |
+| `extension/bookmarklet.txt` | 书签版 URL —— **给人用的最省事入口** |
+| `docs/书签安装与测试.md` | 给非技术用户的逐步安装说明 + 排错表 |
 
-**本技能是自足的**：这三个文件复制到任何地方都能跑，脚本按 `__dirname/scale.json` 找尺子，
-缺了会明确报错而不是用默认值瞎算。浏览器扩展不在包内——它从**同一份** `bin/scale.json` 生成
-（扩展仓库里 `test/gen-scale.js`，漂移会被拦），所以人和 Agent 用的永远是同一把尺子。
+脚本自足：`scripts/grid.js` + `scripts/scale.json` 复制到任何地方都能跑，按 `__dirname/scale.json` 找尺子，
+缺了会明确报错而不是用默认值瞎算。扩展的 `content.js` 与它读**同一份尺子**（由 `scale.json` 生成），
+所以人和 Agent 用的永远是同一把尺子。
+
+## 顺带把扩展源码也给了（可选，但省事）
+
+`extension/` 是这个网格工具的**浏览器扩展完整源码**，与技能同一个尺子：
+
+| 想给人什么 | 怎么做 | 对方要付出 |
+| --- | --- | --- |
+| **只算数字** | 装本技能就行 | 无 |
+| **还要看见网格** | 用 `extension/bookmarklet.txt` 加一个书签 | 粘一次，1 分钟 |
+| **要完整扩展体验**（工具栏图标、`Alt+Shift+G`） | 加载 `extension/` 这个目录 | 开发者模式 → 加载已解压 |
+
+给非技术用户时**优先推书签**——加载已解压那一步会让绝大多数人放弃；扩展这条只留给会的人自己走。
+`docs/书签安装与测试.md` 是给他们看的说明，别口述。
 
 
 ## 支持的表达

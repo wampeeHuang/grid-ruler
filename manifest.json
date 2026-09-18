@@ -8,7 +8,19 @@
     "service_worker": "background.js"
   },
   "action": {
-    "default_title": "网格开关：点一下显示/隐藏网格"
+    "default_title": "网格开关：点一下显示/隐藏网格",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
   },
   "content_scripts": [
     {
