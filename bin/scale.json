@@ -1,0 +1,134 @@
+{
+  "version": 1,
+  "unit": "px",
+  "base": 8,
+  "steps": [
+    8,
+    16,
+    24,
+    32,
+    40,
+    48,
+    64,
+    80,
+    96,
+    128,
+    160,
+    192,
+    256
+  ],
+  "lines": {
+    "8": "最细粒度，对齐用；肉眼可见与否取决于缩放",
+    "32": "中档，组件内间距与栅格半格",
+    "128": "最大档，版面分区与整屏节奏"
+  },
+  "role": {
+    "8": "fine",
+    "32": "mid",
+    "128": "major"
+  },
+  "nudge": {
+    "_comment": "把口头模糊表达换算成确定的 px。delta 是相对当前值的典型改动（px）；candidates 是本次档位可在尺子上落到的其它值，按 base 的倍数给，会吸附去重。",
+    "much-bigger": {
+      "delta": 16,
+      "candidates": [
+        16,
+        32,
+        48
+      ]
+    },
+    "bigger": {
+      "delta": 8,
+      "candidates": [
+        8,
+        16,
+        24
+      ]
+    },
+    "slightly-bigger": {
+      "delta": 4,
+      "candidates": [
+        8,
+        16
+      ]
+    },
+    "slightly-smaller": {
+      "delta": -4,
+      "candidates": [
+        -8,
+        -16
+      ]
+    },
+    "smaller": {
+      "delta": -8,
+      "candidates": [
+        -8,
+        -16,
+        -24
+      ]
+    },
+    "much-smaller": {
+      "delta": -16,
+      "candidates": [
+        -16,
+        -32,
+        -48
+      ]
+    },
+    "closer": {
+      "delta": -8,
+      "candidates": [
+        -8,
+        -16,
+        -24
+      ]
+    },
+    "much-closer": {
+      "delta": -16,
+      "candidates": [
+        -16,
+        -32
+      ]
+    },
+    "farther": {
+      "delta": 8,
+      "candidates": [
+        8,
+        16,
+        24
+      ]
+    },
+    "much-farther": {
+      "delta": 16,
+      "candidates": [
+        16,
+        32
+      ]
+    }
+  },
+  "aliases": {
+    "_comment": "中文口头表达 -> nudge 键，供人和 Agent 共用同一套词",
+    "大一点": "bigger",
+    "大一些": "bigger",
+    "大很多": "much-bigger",
+    "稍大": "slightly-bigger",
+    "稍微大一点": "slightly-bigger",
+    "小一点": "smaller",
+    "小一些": "smaller",
+    "小很多": "much-smaller",
+    "稍小": "slightly-smaller",
+    "稍微小一点": "slightly-smaller",
+    "靠近一点": "closer",
+    "紧一点": "closer",
+    "紧凑一点": "closer",
+    "再靠近一点": "much-closer",
+    "远一点": "farther",
+    "松一点": "farther",
+    "疏一点": "farther",
+    "再远一点": "much-farther"
+  },
+  "snap": {
+    "strategy": "nearest-step-of-base",
+    "maxDeltaForExact": 0
+  }
+}

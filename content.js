@@ -2,9 +2,11 @@
   const OVERLAY_ID = "grid-ruler-overlay";
   const RULER_ID = "grid-ruler-ruler";
   const LEGEND_ID = "grid-ruler-legend";
+  // @scale:begin (由 test/gen-scale.js 从 scale.json 生成，勿手改)
   const FINE = 8;
   const MID = 32;
   const MAJOR = 128;
+  // @scale:end
   const DEEP_GREEN = "#3E571C";
   const LEGEND_TITLE = "网格";
   // Panel default anchor: 32px clear of the viewport's bottom-right corner.

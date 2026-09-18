@@ -39,11 +39,41 @@
 
 | 文件 | 作用 |
 |------|------|
-| `content.js` | 单一真相源。扩展 content script 与书签共用，靠运行时上下文检测分叉（有 `chrome.runtime` → 注册消息监听；否则立即执行开关）。含每层 8/32/128 状态 + 可拖动小面板（指针捕获拖动、3px 点击阈值、位置存 sessionStorage） |
+| `content.js` | 扩展的正身。扩展 content script 与书签共用，靠运行时上下文检测分叉（有 `chrome.runtime` → 注册消息监听；否则立即执行开关）。含每层 8/32/128 状态 + 可拖动小面板（指针捕获拖动、3px 点击阈值、位置存 sessionStorage） |
 | `background.js` | 扩展 service worker。图标 / 快捷键 → 发消息；旧页面未刷新时现场注入兜底 |
 | `manifest.json` | MV3 清单 |
 | `bookmarklet.txt` | 书签版现成 URL（bun 压缩 content.js 生成，UTF-8 无 BOM） |
+| `skill/` | **给 Agent 的技能**（见下） |
+| `bin/grid.js` + `bin/scale.json` | 换算脚本与尺子（技能本体的一部分） |
 | `test/` | 验证。见下表 |
+
+## 尺子只有一把（人和 Agent 共用）
+
+`bin/scale.json` 是**唯一真相源**：基准 8px、档位表、口头表达词表。两边都从它来：
+
+- **人看的**：浏览器扩展把网格画在页面上（`content.js` 的 `FINE/MID/MAJOR`）
+- **Agent 用的**：`skill/SKILL.md` + `bin/grid.js`，把「大一点/靠近一点」换算成确定 px
+
+`content.js` 里那三个常量**由 `bin/scale.json` 生成**，不许手改——改会被检查器拦下：
+
+```bash
+node test/gen-scale.js          # 检查是否漂移（不一致退出码 1）
+node test/gen-scale.js --write  # 从 scale.json 写回 content.js
+```
+
+被标记的区间是 `// @scale:begin` … `// @scale:end`。这样"扩展和技能各写一份、慢慢长歪"就不会发生。
+
+### 技能怎么给 Agent 用
+
+```bash
+node bin/grid.js nudge --from 24 --to 大一点   # 「大一点」：24px -> 32px（+8，即 +1 个 8 的档）
+node bin/grid.js snap 20 13                   # 吸附到最近的档位
+node bin/grid.js check src/app.css            # 检查间距有没有落在尺子上
+node bin/grid.js scale                        # 打印档位表
+```
+
+技能已接入技能统一库（`D:\agent-skills\skills\grid-ruler` → 本仓库 `skill/` 的 junction），
+在能力地图（`localhost:3099/#capabilities`）里显示为「网格标尺」。
 
 `test/` 里的脚本（都需要本机 Python + Playwright + Pillow）：
 
@@ -53,8 +83,10 @@
 | `check_corners.py` | 圆角像素级验证：面板渲染到透明背景，按 alpha 轮廓逐行量圆角曲线，与半径 8px 的圆弧比对（方角会是平的） |
 | `check_bookmarklet.py` | 书签路径冒烟：粘贴 `bookmarklet.txt` 能开面板（几何一致）、能拖动、能点色块、再点一次关闭 |
 | `shots.py` | 生成面板特写图（4 倍放大），供人工眼看配色与圆角 |
+| `gen-scale.js` | 尺子漂移检查 / 生成（纯 Node，无依赖） |
 
 ## 边界
 
 - 扩展根目录禁止任何 `_` 开头的一级文件/目录（如 `_runtime`）——Chrome 保留前缀，整个扩展拒载
 - 本机 Chrome 有扩展加载策略，命令行 `--load-extension` 加载不了；走 UI「加载已解压」不受此限
+- **扩展不能直接被 AI 调用**：它没有 API/MCP/CLI，Agent 无法开关某个网页上的网格。Agent 走 `bin/grid.js` 算数字，人走扩展看网格——这是分工，不是缺口
